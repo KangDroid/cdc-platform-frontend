@@ -1,0 +1,185 @@
+openapi: 3.0.1
+info:
+  title: Platform.Auth
+  version: '1.0'
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: 서비스에 로그인을 실시합니다.
+      description: 등록되지 않은 유저인 경우 NeedsRegistration과 JoinToken을 응답으로 반환합니다.
+      operationId: LoginAsync
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: "OAuth에서 정보를 성공적으로 가져온 경우. 등록되지 않은 사용자는 LoginResult가 NeedsRegistration로 표기되고, 등록된 사용자는 로그인 성공으로 판단해\r\nLoginSucceed를 반환합니다."
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          description: OAuth 로그인 혹은 OAuth 정보를 가져오는데 실패한 경우.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: 서비스에 회원 가입합니다.
+      operationId: RegisterAsync
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/SignUpRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/SignUpRequest'
+      responses:
+        '200':
+          description: 회원 가입에 성공했을 때 반환합니다.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          description: JWT Join Token Validation에 실패했을 때
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: 이미 존재하는 인증 정보일 때
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    CredentialProvider:
+      enum:
+        - Google
+        - Self
+      type: string
+    ErrorResponse:
+      type: object
+      properties:
+        statusCodes:
+          type: integer
+          format: int32
+        errorMessage:
+          type: string
+          nullable: true
+        errorTitle:
+          type: string
+          nullable: true
+      additionalProperties: false
+    LoginRequest:
+      required:
+        - authenticationCode
+        - provider
+      type: object
+      properties:
+        provider:
+          $ref: '#/components/schemas/CredentialProvider'
+        authenticationCode:
+          minLength: 1
+          type: string
+          description: OAuth Provider이 보내주는 인가 코드입니다.
+      additionalProperties: false
+    LoginResult:
+      enum:
+        - NeedsRegistration
+        - LoginSucceed
+      type: string
+    SignUpRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: User Nickname
+          nullable: true
+        email:
+          type: string
+          description: User Email
+          nullable: true
+        profileImageUrl:
+          type: string
+          description: Profile Image URL(Can be NULL)
+          nullable: true
+        joinToken:
+          type: string
+          description: 로그인 API에서 받은 Join Token입니다.
+          nullable: true
+        credentialProvider:
+          $ref: '#/components/schemas/CredentialProvider'
+      additionalProperties: false
+    TokenResponse:
+      required:
+        - loginResult
+        - token
+      type: object
+      properties:
+        loginResult:
+          $ref: '#/components/schemas/LoginResult'
+        token:
+          minLength: 1
+          type: string
+          description: 'Access Token, expires in an hour.'
+        refreshToken:
+          type: string
+          description: 'Refresh Token, expires in 30 days.'
+          nullable: true
+      additionalProperties: false
+  securitySchemes:
+    JwtAuthenticationFilter:
+      type: http
+      scheme: Bearer

@@ -1,0 +1,17 @@
+.gitignore
+.npmignore
+.openapi-generator-ignore
+api.ts
+api/auth-api.ts
+base.ts
+common.ts
+configuration.ts
+git_push.sh
+index.ts
+model/credential-provider.ts
+model/error-response.ts
+model/index.ts
+model/login-request.ts
+model/login-result.ts
+model/sign-up-request.ts
+model/token-response.ts
