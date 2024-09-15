@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { LoginCallbackPage } from './auth/pages/LoginCallbackPage.tsx';
 import { LoginPage } from './auth/pages/LoginPage.tsx';
+import { RegisterPage } from './auth/pages/RegisterPage.tsx';
 import { CustomErrorBoundary } from './common/component/CustomErrorBoundary.tsx';
 
 const queryClient = new QueryClient({
@@ -18,16 +19,17 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <CustomErrorBoundary>
+    <CustomErrorBoundary>
+      <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <Routes>
             <Route path="/auth/login" element={<LoginPage />} />
             <Route path="/auth/callback" element={<LoginCallbackPage />} />
+            <Route path="/auth/register" element={<RegisterPage />} />
           </Routes>
         </BrowserRouter>
-      </CustomErrorBoundary>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </CustomErrorBoundary>
   );
 }
 

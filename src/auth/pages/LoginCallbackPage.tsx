@@ -9,6 +9,8 @@ export function LoginCallbackPage() {
   const navigate = useNavigate();
   const { mutate: login } = useLogin((loginResponse) => {
     if (loginResponse.loginResult === 'NeedsRegistration') {
+      LocalStorageUtils.setJoinToken(loginResponse.token);
+      navigate('/auth/register');
       return;
     }
 
