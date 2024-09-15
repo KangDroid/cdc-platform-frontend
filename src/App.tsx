@@ -7,6 +7,7 @@ import { RegisterPage } from './auth/pages/RegisterPage.tsx';
 import { CustomErrorBoundary } from './common/component/CustomErrorBoundary.tsx';
 import { MainLayout } from './common/component/MainLayout.tsx';
 import { HomePage } from './home/pages/HomePage.tsx';
+import { NotFoundPage } from './home/pages/NotFoundPage.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,6 +32,7 @@ function App() {
             <Route element={<MainLayout />}>
               <Route path="/" element={<HomePage />} />
             </Route>
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </BrowserRouter>
       </QueryClientProvider>
