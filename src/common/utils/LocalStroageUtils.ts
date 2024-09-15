@@ -2,6 +2,19 @@ export class LocalStorageUtils {
   static accessTokenKey: string = 'accessToken';
   static refreshTokenKey: string = 'refreshToken';
   static joinTokenKey: string = 'joinToken';
+  static sideBarKey: string = 'sideBar';
+
+  static setSideBar(sideBar: boolean) {
+    localStorage.setItem(this.sideBarKey, sideBar.toString());
+  }
+
+  static getSideBar(): boolean {
+    const data = localStorage.getItem(this.sideBarKey);
+    if (data === null) {
+      return true;
+    }
+    return data === 'true';
+  }
 
   static setJoinToken(joinToken: string) {
     localStorage.setItem(this.joinTokenKey, joinToken);

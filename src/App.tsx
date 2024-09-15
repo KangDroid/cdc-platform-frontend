@@ -5,6 +5,8 @@ import { LoginCallbackPage } from './auth/pages/LoginCallbackPage.tsx';
 import { LoginPage } from './auth/pages/LoginPage.tsx';
 import { RegisterPage } from './auth/pages/RegisterPage.tsx';
 import { CustomErrorBoundary } from './common/component/CustomErrorBoundary.tsx';
+import { MainLayout } from './common/component/MainLayout.tsx';
+import { HomePage } from './home/pages/HomePage.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,6 +28,9 @@ function App() {
             <Route path="/auth/login" element={<LoginPage />} />
             <Route path="/auth/callback" element={<LoginCallbackPage />} />
             <Route path="/auth/register" element={<RegisterPage />} />
+            <Route element={<MainLayout />}>
+              <Route path="/" element={<HomePage />} />
+            </Route>
           </Routes>
         </BrowserRouter>
       </QueryClientProvider>
