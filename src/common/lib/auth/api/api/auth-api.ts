@@ -44,6 +44,10 @@ import { ErrorResponse } from '../model';
 // @ts-ignore
 import { LoginRequest } from '../model';
 // @ts-ignore
+import { MeResponse } from '../model';
+// @ts-ignore
+import { RefreshTokenRequest } from '../model';
+// @ts-ignore
 import { SignUpRequest } from '../model';
 // @ts-ignore
 import { TokenResponse } from '../model';
@@ -95,6 +99,95 @@ export const AuthApiAxiosParamCreator = function (
       };
       localVarRequestOptions.data = serializeDataIfNeeded(
         LoginRequest,
+        localVarRequestOptions,
+        configuration,
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary 현재 로그인된 사용자의 정보를 가져옵니다.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    meAsync: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+      const localVarPath = `/auth/me`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      // authentication JwtAuthenticationFilter required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration);
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @summary 리프레시 로직을 실행합니다.
+     * @param {RefreshTokenRequest} [RefreshTokenRequest] 리프레시 요청
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    refreshAsync: async (
+      RefreshTokenRequest?: RefreshTokenRequest,
+      options: AxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/auth/refresh`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'POST',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        RefreshTokenRequest,
         localVarRequestOptions,
         configuration,
       );
@@ -188,6 +281,50 @@ export const AuthApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @summary 현재 로그인된 사용자의 정보를 가져옵니다.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async meAsync(
+      options?: AxiosRequestConfig,
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<MeResponse>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.meAsync(options);
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration,
+      );
+    },
+    /**
+     *
+     * @summary 리프레시 로직을 실행합니다.
+     * @param {RefreshTokenRequest} [RefreshTokenRequest] 리프레시 요청
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async refreshAsync(
+      RefreshTokenRequest?: RefreshTokenRequest,
+      options?: AxiosRequestConfig,
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<TokenResponse>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.refreshAsync(
+        RefreshTokenRequest,
+        options,
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration,
+      );
+    },
+    /**
+     *
      * @summary 서비스에 회원 가입합니다.
      * @param {SignUpRequest} [SignUpRequest]
      * @param {*} [options] Override http request option.
@@ -241,6 +378,32 @@ export const AuthApiFactory = function (
     },
     /**
      *
+     * @summary 현재 로그인된 사용자의 정보를 가져옵니다.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    meAsync(options?: any): AxiosPromise<MeResponse> {
+      return localVarFp
+        .meAsync(options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @summary 리프레시 로직을 실행합니다.
+     * @param {RefreshTokenRequest} [RefreshTokenRequest] 리프레시 요청
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    refreshAsync(
+      RefreshTokenRequest?: RefreshTokenRequest,
+      options?: any,
+    ): AxiosPromise<TokenResponse> {
+      return localVarFp
+        .refreshAsync(RefreshTokenRequest, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @summary 서비스에 회원 가입합니다.
      * @param {SignUpRequest} [SignUpRequest]
      * @param {*} [options] Override http request option.
@@ -275,6 +438,36 @@ export class AuthApi extends BaseAPI {
   public loginAsync(LoginRequest?: LoginRequest, options?: AxiosRequestConfig) {
     return AuthApiFp(this.configuration)
       .loginAsync(LoginRequest, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @summary 현재 로그인된 사용자의 정보를 가져옵니다.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AuthApi
+   */
+  public meAsync(options?: AxiosRequestConfig) {
+    return AuthApiFp(this.configuration)
+      .meAsync(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @summary 리프레시 로직을 실행합니다.
+   * @param {RefreshTokenRequest} [RefreshTokenRequest] 리프레시 요청
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AuthApi
+   */
+  public refreshAsync(
+    RefreshTokenRequest?: RefreshTokenRequest,
+    options?: AxiosRequestConfig,
+  ) {
+    return AuthApiFp(this.configuration)
+      .refreshAsync(RefreshTokenRequest, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

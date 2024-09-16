@@ -1,6 +1,6 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
-import { authApi } from '../../common/api/api.ts';
+import { authApi, authenticatedAuthApi } from '../../common/api/api.ts';
 import { CredentialProvider, TokenResponse } from '../../common/lib/auth/api';
 
 export const useLogin = (
@@ -43,6 +43,16 @@ export const useRegistration = (
     },
     onSuccess: (data) => {
       afterRegisterSuccess(data);
+    },
+  });
+};
+
+export const useMyInformation = () => {
+  return useQuery({
+    queryKey: ['my-information'],
+    queryFn: async () => {
+      const response = await authenticatedAuthApi.meAsync();
+      return response.data;
     },
   });
 };

@@ -13,5 +13,7 @@ model/error-response.ts
 model/index.ts
 model/login-request.ts
 model/login-result.ts
+model/me-response.ts
+model/refresh-token-request.ts
 model/sign-up-request.ts
 model/token-response.ts
