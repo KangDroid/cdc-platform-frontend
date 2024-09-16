@@ -1,15 +1,18 @@
 import {
+  BulbOutlined,
   DashboardOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  MoonOutlined,
   UploadOutlined,
   VideoCameraOutlined,
 } from '@ant-design/icons';
-import { Button, Layout, Menu, theme } from 'antd';
+import { Button, Flex, Layout, Menu, theme } from 'antd';
 import { useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { MeProvider } from '../provider/MeProvider.tsx';
+import { useSystemConfig } from '../provider/SystemConfigProvider.tsx';
 import { LocalStorageUtils } from '../utils/LocalStroageUtils.ts';
 
 const { Header, Sider, Content } = Layout;
@@ -21,6 +24,7 @@ export function MainLayout() {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const navigate = useNavigate();
+  const { currentTheme, toggleTheme } = useSystemConfig();
   return (
     <MeProvider>
       <Layout
@@ -67,7 +71,14 @@ export function MainLayout() {
           />
         </Sider>
         <Layout>
-          <Header style={{ padding: 0, background: colorBgContainer }}>
+          <Header
+            style={{
+              padding: 0,
+              background: colorBgContainer,
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
             <Button
               type="text"
               icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -81,6 +92,20 @@ export function MainLayout() {
                 height: 64,
               }}
             />
+            <Flex>
+              <Button
+                type={'text'}
+                icon={
+                  currentTheme === 'light' ? <MoonOutlined /> : <BulbOutlined />
+                }
+                style={{
+                  fontSize: '16px',
+                  width: 64,
+                  height: 64,
+                }}
+                onClick={toggleTheme}
+              />
+            </Flex>
           </Header>
           <Content
             style={{

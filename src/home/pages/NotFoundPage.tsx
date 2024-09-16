@@ -1,11 +1,12 @@
-import { Button, Flex, Result } from 'antd';
+import { Button, Layout, Result } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
 export function NotFoundPage() {
   const navigate = useNavigate();
   return (
-    <Flex
+    <Layout
       style={{
+        display: 'flex',
         height: '100vh',
         justifyContent: 'center',
         alignItems: 'center',
@@ -17,7 +18,6 @@ export function NotFoundPage() {
         subTitle="이 페이지는 찾을 수 없어요!"
         extra={
           <Button
-            type="primary"
             onClick={() => {
               navigate('/');
             }}
@@ -26,6 +26,6 @@ export function NotFoundPage() {
           </Button>
         }
       />
-    </Flex>
+    </Layout>
   );
 }
