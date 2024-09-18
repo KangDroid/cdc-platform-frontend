@@ -15,13 +15,13 @@ import { MeProvider } from '../provider/MeProvider.tsx';
 import { useSystemConfig } from '../provider/SystemConfigProvider.tsx';
 import { LocalStorageUtils } from '../utils/LocalStroageUtils.ts';
 
-const { Header, Sider, Content } = Layout;
+const { Header, Sider } = Layout;
 
 export function MainLayout() {
   const { pathname } = useLocation();
   const [collapsed, setCollapsed] = useState(LocalStorageUtils.getSideBar());
   const {
-    token: { colorBgContainer, borderRadiusLG },
+    token: { colorBgContainer },
   } = theme.useToken();
   const navigate = useNavigate();
   const { currentTheme, toggleTheme } = useSystemConfig();
@@ -107,17 +107,7 @@ export function MainLayout() {
               />
             </Flex>
           </Header>
-          <Content
-            style={{
-              margin: '24px 16px',
-              padding: 24,
-              minHeight: 280,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
-            }}
-          >
-            <Outlet />
-          </Content>
+          <Outlet />
         </Layout>
       </Layout>
     </MeProvider>
