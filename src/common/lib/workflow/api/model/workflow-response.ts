@@ -49,6 +49,18 @@ export interface WorkflowResponse {
    * @type {string}
    * @memberof WorkflowResponse
    */
+  createdAt?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof WorkflowResponse
+   */
+  updatedAt?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof WorkflowResponse
+   */
   startedAt?: string | null;
   /**
    *

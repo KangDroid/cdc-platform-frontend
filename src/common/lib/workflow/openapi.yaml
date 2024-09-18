@@ -183,6 +183,12 @@ components:
         createdBy:
           type: string
           nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
         startedAt:
           type: string
           format: date-time
