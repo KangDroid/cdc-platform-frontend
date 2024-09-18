@@ -17,11 +17,22 @@ export function WorkflowListPage() {
       pageTitle={'Workflow 리스트'}
       pageDescription={'Workflow들을 관리합니다.'}
     >
-      <Table
-        loading={isLoading}
-        columns={data?.columns}
-        dataSource={data?.data}
-      />
+      <div
+        style={{
+          overflowX: 'auto',
+          overflowY: 'auto',
+        }}
+      >
+        <Table
+          style={{
+            minWidth: '1024px',
+          }}
+          columns={data?.columns ?? []}
+          dataSource={data?.data ?? []}
+          loading={isLoading}
+          rowKey={(record) => record.id!}
+        />
+      </div>
     </CommonPage>
   );
 }
