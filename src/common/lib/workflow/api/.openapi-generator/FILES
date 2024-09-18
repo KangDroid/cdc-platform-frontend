@@ -1,0 +1,17 @@
+.gitignore
+.npmignore
+.openapi-generator-ignore
+api.ts
+api/workflow-api.ts
+base.ts
+common.ts
+configuration.ts
+git_push.sh
+index.ts
+model/create-workflow-request.ts
+model/database-metadata-response.ts
+model/database-metadata.ts
+model/database-type.ts
+model/index.ts
+model/workflow-response.ts
+model/workflow-status.ts

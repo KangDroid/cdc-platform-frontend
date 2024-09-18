@@ -10,6 +10,7 @@ import { MainLayout } from './common/component/MainLayout.tsx';
 import { useSystemConfig } from './common/provider/SystemConfigProvider.tsx';
 import { HomePage } from './home/pages/HomePage.tsx';
 import { NotFoundPage } from './home/pages/NotFoundPage.tsx';
+import { WorkflowListPage } from './workflows/pages/WorkflowListPage.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -42,6 +43,7 @@ function App() {
               <Route path="/auth/register" element={<RegisterPage />} />
               <Route element={<MainLayout />}>
                 <Route path="/" element={<HomePage />} />
+                <Route path="/workflows" element={<WorkflowListPage />} />
               </Route>
               <Route path="*" element={<NotFoundPage />} />
             </Routes>

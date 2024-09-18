@@ -2,6 +2,7 @@ import axios from 'axios';
 
 import { API_BASE_URL } from '../config/config.ts';
 import { AuthApi, Configuration } from '../lib/auth/api';
+import { WorkflowApi } from '../lib/workflow/api';
 import { LocalStorageUtils } from '../utils/LocalStroageUtils.ts';
 
 export const defaultAuthorizationInstance = axios.create();
@@ -63,6 +64,12 @@ const config = new Configuration({
 export const authApi = new AuthApi(config);
 
 export const authenticatedAuthApi = new AuthApi(
+  config,
+  undefined,
+  defaultAuthorizationInstance,
+);
+
+export const workflowApi = new WorkflowApi(
   config,
   undefined,
   defaultAuthorizationInstance,

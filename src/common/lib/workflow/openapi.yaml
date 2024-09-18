@@ -1,0 +1,212 @@
+openapi: 3.0.1
+info:
+  title: Platform.Workflow
+  version: '1.0'
+paths:
+  /workflows:
+    post:
+      tags:
+        - Workflow
+      summary: Workflow를 새로 생성합니다.
+      operationId: CreateWorkflowAsync
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWorkflowRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CreateWorkflowRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CreateWorkflowRequest'
+      responses:
+        '200':
+          description: Success
+      security:
+        - JwtAuthenticationFilter: []
+    get:
+      tags:
+        - Workflow
+      operationId: ListWorkflowAsync
+      parameters:
+        - name: includeDeleted
+          in: query
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkflowResponse'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkflowResponse'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkflowResponse'
+      security:
+        - JwtAuthenticationFilter: []
+  '/workflows/{workflowId}':
+    delete:
+      tags:
+        - Workflow
+      operationId: DeleteWorkflowAsync
+      parameters:
+        - name: workflowId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+      security:
+        - JwtAuthenticationFilter: []
+    get:
+      tags:
+        - Workflow
+      operationId: GetWorkflowAsync
+      parameters:
+        - name: workflowId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/WorkflowResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowResponse'
+      security:
+        - JwtAuthenticationFilter: []
+  '/workflows/{workflowId}/start':
+    post:
+      tags:
+        - Workflow
+      operationId: StartWorkflowAsync
+      parameters:
+        - name: workflowId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+      security:
+        - JwtAuthenticationFilter: []
+components:
+  schemas:
+    CreateWorkflowRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        sourceMetadata:
+          $ref: '#/components/schemas/DatabaseMetadata'
+        targetMetadata:
+          $ref: '#/components/schemas/DatabaseMetadata'
+      additionalProperties: false
+    DatabaseMetadata:
+      type: object
+      properties:
+        databaseType:
+          $ref: '#/components/schemas/DatabaseType'
+        host:
+          type: string
+          nullable: true
+        port:
+          type: string
+          nullable: true
+        username:
+          type: string
+          nullable: true
+        password:
+          type: string
+          nullable: true
+        targettedDatabaseName:
+          type: string
+          nullable: true
+      additionalProperties: false
+    DatabaseMetadataResponse:
+      type: object
+      properties:
+        databaseType:
+          $ref: '#/components/schemas/DatabaseType'
+        host:
+          type: string
+          nullable: true
+        port:
+          type: string
+          nullable: true
+        username:
+          type: string
+          nullable: true
+        targettedDatabaseName:
+          type: string
+          nullable: true
+      additionalProperties: false
+    DatabaseType:
+      enum:
+        - MsSql
+        - Postgres
+      type: string
+    WorkflowResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        createdBy:
+          type: string
+          nullable: true
+        startedAt:
+          type: string
+          format: date-time
+          nullable: true
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+        workflowStatus:
+          $ref: '#/components/schemas/WorkflowStatus'
+        sourceMetadata:
+          $ref: '#/components/schemas/DatabaseMetadataResponse'
+        targetMetadata:
+          $ref: '#/components/schemas/DatabaseMetadataResponse'
+      additionalProperties: false
+    WorkflowStatus:
+      enum:
+        - Created
+        - Started
+        - InProgress
+        - Cancelled
+        - Failed
+      type: string
+  securitySchemes:
+    JwtAuthenticationFilter:
+      type: http
+      scheme: Bearer
