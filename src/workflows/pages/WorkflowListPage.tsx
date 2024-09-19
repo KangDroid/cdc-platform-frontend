@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { CommonPage } from '../../common/component/CommonPage.tsx';
 import { CreateWorkflowModalButton } from '../components/CreateWorkflowModalButton.tsx';
 import { DatabaseTypeTag } from '../components/DatabaseTypeTag.tsx';
+import { WorkflowAction } from '../components/WorkflowAction.tsx';
 import { WorkflowDetailView } from '../components/WorkflowDetailView.tsx';
 import { WorkflowStatusTag } from '../components/WorkflowStatusTag.tsx';
 import { useWorkflowListTable } from '../services/WorkflowService.ts';
@@ -15,6 +16,12 @@ export function WorkflowListPage() {
     false,
     (statusData) => <WorkflowStatusTag status={statusData} />,
     (databaseType) => <DatabaseTypeTag databaseType={databaseType} />,
+    (workflow) => (
+      <WorkflowAction
+        workflow={workflow}
+        refreshList={() => setRefreshKey(new Date().toString())}
+      />
+    ),
   );
   return (
     <CommonPage

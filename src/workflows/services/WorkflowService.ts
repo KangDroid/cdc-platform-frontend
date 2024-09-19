@@ -15,6 +15,7 @@ export const useWorkflowListTable = (
   includeDeleted: boolean,
   renderStatus: (status: WorkflowStatus) => ReactNode,
   renderDatabaseType: (databaseType: DatabaseType) => ReactNode,
+  renderAction: (workflow: WorkflowResponse) => ReactNode,
 ) => {
   return useQuery({
     queryKey: ['listWorkflow', refreshKey, includeDeleted],
@@ -44,6 +45,11 @@ export const useWorkflowListTable = (
           render: (record) =>
             renderDatabaseType(record.targetMetadata.databaseType),
         },
+        {
+          title: 'Action',
+          key: 'action',
+          render: (record) => renderAction(record),
+        },
       ];
 
       return {
@@ -61,5 +67,15 @@ export const useCreateWorkflow = (afterCreation: () => void) => {
       await workflowApi.createWorkflowAsync(data);
     },
     onSuccess: afterCreation,
+  });
+};
+
+export const useDeleteWorkflow = (afterDelete: () => void) => {
+  return useMutation({
+    mutationKey: ['deleteWorkflow'],
+    mutationFn: async (id: string) => {
+      await workflowApi.deleteWorkflowAsync(id);
+    },
+    onSuccess: afterDelete,
   });
 };
