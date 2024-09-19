@@ -3,6 +3,8 @@ import { Divider, theme } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { ReactNode } from 'react';
 
+import { MessageAlertProvider } from '../provider/MessageAlertProvider.tsx';
+
 export function CommonPage({
   pageTitle,
   pageDescription,
@@ -16,7 +18,7 @@ export function CommonPage({
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   return (
-    <>
+    <MessageAlertProvider>
       <Content
         style={{
           margin: '24px 16px',
@@ -37,6 +39,6 @@ export function CommonPage({
         />
         {children}
       </Content>
-    </>
+    </MessageAlertProvider>
   );
 }

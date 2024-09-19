@@ -1,9 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { TableProps } from 'antd';
 import { ReactNode } from 'react';
 
 import { workflowApi } from '../../common/api/api.ts';
 import {
+  CreateWorkflowRequest,
   DatabaseType,
   WorkflowResponse,
   WorkflowStatus,
@@ -50,5 +51,15 @@ export const useWorkflowListTable = (
         data: response.data,
       };
     },
+  });
+};
+
+export const useCreateWorkflow = (afterCreation: () => void) => {
+  return useMutation({
+    mutationKey: ['createWorkflow'],
+    mutationFn: async (data: CreateWorkflowRequest) => {
+      await workflowApi.createWorkflowAsync(data);
+    },
+    onSuccess: afterCreation,
   });
 };
