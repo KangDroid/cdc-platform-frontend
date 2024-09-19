@@ -79,3 +79,13 @@ export const useDeleteWorkflow = (afterDelete: () => void) => {
     onSuccess: afterDelete,
   });
 };
+
+export const useStartWorkflow = (afterStart: () => void) => {
+  return useMutation({
+    mutationKey: ['startWorkflow'],
+    mutationFn: async (id: string) => {
+      await workflowApi.startWorkflowAsync(id);
+    },
+    onSuccess: afterStart,
+  });
+};
