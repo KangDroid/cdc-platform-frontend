@@ -47,6 +47,11 @@ export function WorkflowAction({
             alertMessage.error('이 Workflow는 이미 시작되었습니다.');
             return;
           }
+
+          if (workflow.deletedAt) {
+            alertMessage.error('이 Workflow는 삭제되었습니다.');
+            return;
+          }
           startWorkflow(workflow.id!);
         }}
         onCancel={() => {}}
@@ -65,6 +70,10 @@ export function WorkflowAction({
           </>
         }
         onConfirm={() => {
+          if (workflow.deletedAt) {
+            alertMessage.error('이 Workflow는 이미 삭제되었습니다.');
+            return;
+          }
           deleteWorkflow(workflow.id!);
         }}
         onCancel={() => {}}
