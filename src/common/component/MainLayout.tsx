@@ -11,6 +11,7 @@ import { Button, Flex, Layout, Menu, theme } from 'antd';
 import { useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
+import { NotificationHeaderButton } from '../../notifications/components/NotificationHeaderButton.tsx';
 import { MeProvider } from '../provider/MeProvider.tsx';
 import { useSystemConfig } from '../provider/SystemConfigProvider.tsx';
 import { LocalStorageUtils } from '../utils/LocalStroageUtils.ts';
@@ -93,6 +94,7 @@ export function MainLayout() {
               }}
             />
             <Flex>
+              <NotificationHeaderButton />
               <Button
                 type={'text'}
                 icon={

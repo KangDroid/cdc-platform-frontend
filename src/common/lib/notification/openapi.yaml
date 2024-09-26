@@ -1,0 +1,81 @@
+openapi: 3.0.1
+info:
+  title: Platform.Notification
+  version: '1.0'
+paths:
+  /notifications:
+    get:
+      tags:
+        - Notification
+      operationId: GetNotifications
+      parameters:
+        - name: includeRead
+          in: query
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NotificationResponse'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NotificationResponse'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NotificationResponse'
+      security:
+        - JwtAuthenticationFilter: []
+components:
+  schemas:
+    NotificationResponse:
+      required:
+        - content
+        - createdAt
+        - id
+        - severity
+        - title
+        - userId
+      type: object
+      properties:
+        id:
+          minLength: 1
+          type: string
+        userId:
+          minLength: 1
+          type: string
+        title:
+          minLength: 1
+          type: string
+        content:
+          minLength: 1
+          type: string
+        severity:
+          $ref: '#/components/schemas/NotificationSeverity'
+        createdAt:
+          type: string
+          format: date-time
+        readAt:
+          type: string
+          format: date-time
+          nullable: true
+      additionalProperties: false
+    NotificationSeverity:
+      enum:
+        - Informational
+        - Success
+        - Error
+      type: string
+  securitySchemes:
+    JwtAuthenticationFilter:
+      type: http
+      scheme: Bearer

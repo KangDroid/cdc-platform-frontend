@@ -2,6 +2,7 @@ import axios from 'axios';
 
 import { API_BASE_URL } from '../config/config.ts';
 import { AuthApi, Configuration } from '../lib/auth/api';
+import { NotificationApi } from '../lib/notification/api';
 import { WorkflowApi, WorkflowConnectionApi } from '../lib/workflow/api';
 import { LocalStorageUtils } from '../utils/LocalStroageUtils.ts';
 
@@ -76,6 +77,12 @@ export const workflowApi = new WorkflowApi(
 );
 
 export const workflowConnectionApi = new WorkflowConnectionApi(
+  config,
+  undefined,
+  defaultAuthorizationInstance,
+);
+
+export const notificationApi = new NotificationApi(
   config,
   undefined,
   defaultAuthorizationInstance,
