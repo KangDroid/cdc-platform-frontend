@@ -1,6 +1,7 @@
 import {
   Button,
   Form,
+  FormInstance,
   Input,
   InputNumber,
   Modal,
@@ -11,7 +12,11 @@ import { useState } from 'react';
 
 import { DatabaseType } from '../../common/lib/workflow/api';
 import { useAlertMessage } from '../../common/provider/MessageAlertProvider.tsx';
-import { useCreateWorkflow } from '../services/WorkflowService.ts';
+import {
+  useCreateWorkflow,
+  useDatabaseSourceHealthCheck,
+  useDatabaseTargetHealthCheck,
+} from '../services/WorkflowService.ts';
 
 export function CreateWorkflowModalButton({
   updateList,
@@ -21,6 +26,8 @@ export function CreateWorkflowModalButton({
   const alertMessage = useAlertMessage();
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
+  const [sourceVerified, setSourceVerified] = useState(false);
+  const [targetVerified, setTargetVerified] = useState(false);
   const { mutate: createWorkflow } = useCreateWorkflow(() => {
     alertMessage.success('Workflow가 성공적으로 추가되었습니다.');
     setTimeout(() => {
@@ -42,7 +49,16 @@ export function CreateWorkflowModalButton({
         title={'Workflow 생성'}
         okText="확인"
         cancelText="취소"
-        onOk={() => form.submit()}
+        onOk={async () => {
+          await form.validateFields();
+          if (sourceVerified && targetVerified) {
+            form.submit();
+          } else {
+            alertMessage.error(
+              'Source 또는 Target Database 연결이 확인되지 않았습니다. "연결 확인하기" 버튼을 눌러 확인해 주세요.',
+            );
+          }
+        }}
         open={visible}
         onCancel={() => {
           setVisible(false);
@@ -80,9 +96,17 @@ export function CreateWorkflowModalButton({
               <Input placeholder="워크플로우 이름" />
             </Form.Item>
             <Typography.Title level={5}>Source Database 정보</Typography.Title>
-            <CdcDatabaseInput target={'sourceMetadata'} />
+            <CdcDatabaseInput
+              target={'sourceMetadata'}
+              form={form}
+              setVerified={setSourceVerified}
+            />
             <Typography.Title level={5}>Target Database 정보</Typography.Title>
-            <CdcDatabaseInput target={'targetMetadata'} />
+            <CdcDatabaseInput
+              target={'targetMetadata'}
+              form={form}
+              setVerified={setTargetVerified}
+            />
           </Form>
         </div>
       </Modal>
@@ -92,9 +116,40 @@ export function CreateWorkflowModalButton({
 
 function CdcDatabaseInput({
   target,
+  form,
+  setVerified,
 }: {
   target: 'sourceMetadata' | 'targetMetadata';
+  form: FormInstance;
+  setVerified: (verified: boolean) => void;
 }) {
+  const alertMessage = useAlertMessage();
+  const { mutate: testSourceConnection } = useDatabaseSourceHealthCheck(
+    (response) => {
+      if (response.result) {
+        setVerified(true);
+        alertMessage.success('Source Database 연결이 확인되었습니다.');
+      } else {
+        setVerified(false);
+        alertMessage.error(
+          `Source Database 연결이 실패했습니다: ${response.reason}`,
+        );
+      }
+    },
+  );
+  const { mutate: testTargetConnection } = useDatabaseTargetHealthCheck(
+    (response) => {
+      if (response.result) {
+        setVerified(true);
+        alertMessage.success('Target Database 연결이 확인되었습니다.');
+      } else {
+        setVerified(false);
+        alertMessage.error(
+          `Target Database 연결이 실패했습니다: ${response.reason}`,
+        );
+      }
+    },
+  );
   return (
     <>
       <Form.Item
@@ -179,6 +234,28 @@ function CdcDatabaseInput({
       >
         <Input placeholder={'데이터베이스 이름'} />
       </Form.Item>
+      <Button
+        onClick={() => {
+          const formFieldValue = form.getFieldsValue();
+          if (target === 'sourceMetadata') {
+            const sourceData = {
+              ...formFieldValue.sourceMetadata,
+              port: formFieldValue.sourceMetadata?.port?.toString(),
+            };
+            testSourceConnection(sourceData);
+          }
+
+          if (target === 'targetMetadata') {
+            const targetData = {
+              ...formFieldValue.targetMetadata,
+              port: formFieldValue.targetMetadata?.port?.toString(),
+            };
+            testTargetConnection(targetData);
+          }
+        }}
+      >
+        연결 확인하기
+      </Button>
     </>
   );
 }

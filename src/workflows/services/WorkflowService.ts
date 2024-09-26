@@ -2,10 +2,13 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { TableProps } from 'antd';
 import { ReactNode } from 'react';
 
-import { workflowApi } from '../../common/api/api.ts';
+import { workflowApi, workflowConnectionApi } from '../../common/api/api.ts';
 import {
   CreateWorkflowRequest,
+  DatabaseMetadata,
   DatabaseType,
+  SourceConnectionVerificationResponse,
+  TargetConnectionVerificationResponse,
   WorkflowResponse,
   WorkflowStatus,
 } from '../../common/lib/workflow/api';
@@ -87,5 +90,35 @@ export const useStartWorkflow = (afterStart: () => void) => {
       await workflowApi.startWorkflowAsync(id);
     },
     onSuccess: afterStart,
+  });
+};
+
+export const useDatabaseSourceHealthCheck = (
+  onSuccess: (response: SourceConnectionVerificationResponse) => void,
+) => {
+  return useMutation({
+    mutationKey: ['databaseSourceHealthCheck'],
+    mutationFn: async (databaseMeta: DatabaseMetadata) => {
+      const response =
+        await workflowConnectionApi.verifySourceConnectionAsync(databaseMeta);
+      return response.data;
+    },
+    onSuccess: onSuccess,
+  });
+};
+
+export const useDatabaseTargetHealthCheck = (
+  onSuccess: (response: TargetConnectionVerificationResponse) => void,
+) => {
+  return useMutation({
+    mutationKey: ['databaseTargetHealthCheck'],
+    mutationFn: async (databaseMeta: DatabaseMetadata) => {
+      const response =
+        await workflowConnectionApi.verifyDestinationConnectionAsync(
+          databaseMeta,
+        );
+      return response.data;
+    },
+    onSuccess: onSuccess,
   });
 };

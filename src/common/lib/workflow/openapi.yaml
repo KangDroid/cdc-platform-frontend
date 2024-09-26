@@ -114,6 +114,68 @@ paths:
           description: Success
       security:
         - JwtAuthenticationFilter: []
+  /workflows/connections/source/verification:
+    post:
+      tags:
+        - WorkflowConnection
+      operationId: VerifySourceConnectionAsync
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatabaseMetadata'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/DatabaseMetadata'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/DatabaseMetadata'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/SourceConnectionVerificationResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SourceConnectionVerificationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/SourceConnectionVerificationResponse'
+      security:
+        - JwtAuthenticationFilter: []
+  /workflows/connections/destination/verification:
+    post:
+      tags:
+        - WorkflowConnection
+      operationId: VerifyDestinationConnectionAsync
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatabaseMetadata'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/DatabaseMetadata'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/DatabaseMetadata'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/TargetConnectionVerificationResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TargetConnectionVerificationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/TargetConnectionVerificationResponse'
+      security:
+        - JwtAuthenticationFilter: []
 components:
   schemas:
     CreateWorkflowRequest:
@@ -171,6 +233,28 @@ components:
         - MsSql
         - Postgres
       type: string
+    SourceConnectionVerificationResponse:
+      type: object
+      properties:
+        databaseMetadata:
+          $ref: '#/components/schemas/DatabaseMetadata'
+        result:
+          type: boolean
+        reason:
+          type: string
+          nullable: true
+      additionalProperties: false
+    TargetConnectionVerificationResponse:
+      type: object
+      properties:
+        databaseMetadata:
+          $ref: '#/components/schemas/DatabaseMetadata'
+        result:
+          type: boolean
+        reason:
+          type: string
+          nullable: true
+      additionalProperties: false
     WorkflowResponse:
       type: object
       properties:

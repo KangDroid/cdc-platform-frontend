@@ -13,3 +13,4 @@
  */
 
 export * from './api/workflow-api';
+export * from './api/workflow-connection-api';

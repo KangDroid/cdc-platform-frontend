@@ -3,6 +3,7 @@
 .openapi-generator-ignore
 api.ts
 api/workflow-api.ts
+api/workflow-connection-api.ts
 base.ts
 common.ts
 configuration.ts
@@ -13,5 +14,7 @@ model/database-metadata-response.ts
 model/database-metadata.ts
 model/database-type.ts
 model/index.ts
+model/source-connection-verification-response.ts
+model/target-connection-verification-response.ts
 model/workflow-response.ts
 model/workflow-status.ts
