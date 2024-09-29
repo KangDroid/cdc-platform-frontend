@@ -24,7 +24,11 @@ export function NotificationItem({
       }}
     >
       <Avatar icon={<NotificationIcon severity={notification.severity} />} />
-      <div>
+      <div
+        style={{
+          width: '480px',
+        }}
+      >
         <Typography.Text strong style={{ display: 'block' }}>
           {notification.title}
         </Typography.Text>
