@@ -12,8 +12,10 @@ import {
 
 export function NotificationItem({
   notification,
+  readNotification,
 }: {
   notification: NotificationResponse;
+  readNotification: (notificationId: string) => void;
 }) {
   return (
     <Flex
@@ -44,7 +46,9 @@ export function NotificationItem({
           alignItems: 'center',
         }}
       >
-        <Button type="link">읽음</Button>
+        <Button type="link" onClick={() => readNotification(notification.id)}>
+          읽음
+        </Button>
       </Flex>
     </Flex>
   );
